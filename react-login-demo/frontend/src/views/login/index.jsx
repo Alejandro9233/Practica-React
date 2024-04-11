@@ -58,7 +58,7 @@ const Login = ({ setToken, setEmail }) => {
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error('Login failed:', error);
-      setAlert({ show: true, message: 'Login failed. Please try again.' });
+      setAlert({ show: true, message: 'Login failed. Please try again. make sure to change the visibility of the ports to Public' });
     }
   };
 

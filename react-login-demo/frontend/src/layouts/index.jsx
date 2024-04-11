@@ -6,7 +6,7 @@ import Sidebar from "./sideBar";
 
 const { Header, Content, Sider } = Layout;
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, setToken }) => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Header style={{ padding: 0 }}>
@@ -14,7 +14,7 @@ const MainLayout = ({ children }) => {
       </Header>
       <Layout>
         <Sider width={200} style={{ background: "#fff" }}>
-          <Sidebar />
+          <Sidebar setToken={setToken} />
         </Sider>
         <Content style={{ padding: '0 24px', minHeight: 280 }}>
           {children}

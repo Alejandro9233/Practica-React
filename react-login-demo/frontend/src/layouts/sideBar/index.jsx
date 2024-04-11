@@ -7,8 +7,7 @@ import { Menu } from "./elements";
 const { Item } = Menu;
 const { Text } = Typography;
 
-// Use withRouter to inject history, location, and match props
-const Sidebar = ({ history }) => {
+const Sidebar = ({ history, setToken }) => {
   let routes = (
     <>
       <Item icon={<MessageTwoTone />} key="/home">
@@ -62,7 +61,7 @@ const Sidebar = ({ history }) => {
           justifyContent: "center",
         }}
       >
-        <Button type="danger" onClick={() => console.log("cerrar")}>
+        <Button type="danger" onClick={() => setToken("")}>
           Cerrar Session
         </Button>
       </div>

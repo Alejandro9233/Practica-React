@@ -30,7 +30,7 @@ function App() {
       {!token ? (
         <Login setToken={setToken} setEmail={setEmail} />
       ) : (
-        <MainLayout>
+        <MainLayout setToken={setToken} >
           <User email={email}/>
         </MainLayout>
       )}
