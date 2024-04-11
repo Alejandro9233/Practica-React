@@ -1,64 +1,126 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Box, TextField, Button, Typography, Alert } from '@mui/material';
 
 async function loginUser(credentials) {
-  return fetch('https://obscure-palm-tree-gjj7g4xqqjw3gjp-8080.app.github.dev/login', {
+  const hostname = window.location.hostname;
+  const parts = hostname.split('.');
+  let subdomain = parts[0];
+  subdomain = subdomain.replace('-3000', ''); // Remove '3000' from the subdomain
+  const domain = parts.slice(1, 4).join('.');
+  const formattedAddress = `https://${subdomain}-8080.${domain}/login`;
+
+  return fetch(formattedAddress, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(credentials)
+    body: JSON.stringify(credentials),
   })
-    .then(data => data.json())
- }
+  .then(data => {
+    if (!data.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return data.json();
+  })
+  .catch(error => {
+    console.error('There was a problem with your fetch operation:', error);
+    throw error; // Re-throw to be caught by the caller
+  });
+}
+
 
 const Login = ({ setToken, setEmail }) => {
-  const [email, setEmaill] = useState('');
-  const [password, setPassword] = useState('')
+  const [emaill, setEmaill] = useState('');
+  const [password, setPassword] = useState('');
+  const [alert, setAlert] = useState({ show: false, message: '' });
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const token = await loginUser({
-      email,
-      password
-    });
-    setToken(token);
-    setEmail(email);
-  }
+    if (!emaill || !password) {
+      // Show an alert if either the email or password is missing
+      const missingFields = [];
+      if (!emaill) missingFields.push('email');
+      if (!password) missingFields.push('password');
+      setAlert({ show: true, message: `Please enter your ${missingFields.join(' and ')}.` });
+      return;
+    }
+    // If both email and password are provided, attempt to log in
+    try {
+      const token = await loginUser({
+        emaill,
+        password,
+      });
+      setToken(token);
+      setEmail(emaill);
+      // Reset the alert state in case it was previously set
+      setAlert({ show: false, message: '' });
+    } catch (error) {
+      // Handle errors (e.g., show an error message)
+      console.error('Login failed:', error);
+      setAlert({ show: true, message: 'Login failed. Please try again.' });
+    }
+  };
 
   return (
-    <div className={'mainContainer'}>
-      <div className={'titleContainer'}>
-        <div>Login</div>
-      </div>
-      <br />
-      <div className={'inputContainer'}>
-        <input
-          value={email}
-          placeholder="Enter your email here"
-          onChange={(ev) => setEmaill(ev.target.value)}
-          className={'inputBox'}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+      }}
+    >
+      <Typography variant="h4" component="h1" gutterBottom>
+        Login
+      </Typography>
+      {alert.show && (
+        <Alert severity="error" sx={{ mb: 2, width: '100%', maxWidth: 360 }}>
+          {alert.message}
+        </Alert>
+      )}
+      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          value={emaill}
+          onChange={(e) => setEmaill(e.target.value)}
         />
-      </div>
-      <br />
-      <div className={'inputContainer'}>
-        <input
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
           value={password}
-          placeholder="Enter your password here"
-          onChange={(ev) => setPassword(ev.target.value)}
-          className={'inputBox'}
+          onChange={(e) => setPassword(e.target.value)}
         />
-      </div>
-      <br />
-      <div className={'inputContainer'}>
-        <input className={'inputButton'} type="button" onClick={handleSubmit} value={'Log in'} />
-      </div>
-    </div>
-  )
-}
-
-export default Login
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Log In
+        </Button>
+      </Box>
+    </Box>
+  );
+};
 
 Login.propTypes = {
-  setToken: PropTypes.func.isRequired
+  setToken: PropTypes.func.isRequired,
+  setEmail: PropTypes.func.isRequired,
 };
+
+export default Login;

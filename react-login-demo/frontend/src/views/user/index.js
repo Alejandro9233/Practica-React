@@ -12,13 +12,13 @@ const Home = Loadable({
   loader: () => import("./routes/home"),
   loading: TopBarProgress,
 });
-const
-const Dash = () => {
+
+const Dash = ({ email }) => {
 
     return (
       <Switch>
         <Route path="/home">
-          <Home />
+          <Home email={email} />
         </Route>
         <Route path="/dashboard">
           <Dashboard />

@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Layout } from "antd"; // Note the change from 'Layer' to 'Layout' for clarity
+import { Layout } from "antd";
 import ResponsiveAppBar from "./navBar";
-import Sidebar from "./sideBar"; // Import your Sidebar component
+import Sidebar from "./sideBar";
 
 const { Header, Content, Sider } = Layout;
 

@@ -1,23 +1,41 @@
-import { useState } from 'react'
-//import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
-import MainLayout from './layouts'
-import Login from './views/login'
-import User from './views/user'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import MainLayout from './layouts';
+import Login from './views/login';
+import User from './views/user';
+import './App.css';
 
 function App() {
-  const [token, setToken] = useState("");
-  const [email, setEmail] = useState("");
+  const [token, setToken] = useState(localStorage.getItem('token') || "");
+  const [email, setEmail] = useState(localStorage.getItem('email') || "");
 
-  if(token) {
-    return <Login setToken={setToken} setEmail={setEmail} />
-  }
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('token');
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (email) {
+      localStorage.setItem('email', email);
+    } else {
+      localStorage.removeItem('email');
+    }
+  }, [email]);
 
   return (
-    <MainLayout>
-      <User email={email}/>
-    </MainLayout>
-  )
+    <Router>
+      {!token ? (
+        <Login setToken={setToken} setEmail={setEmail} />
+      ) : (
+        <MainLayout>
+          <User email={email}/>
+        </MainLayout>
+      )}
+    </Router>
+  );
 }
 
-export default App
+export default App;
