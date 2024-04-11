@@ -19,7 +19,7 @@ const Sidebar = ({ history, setToken }) => {
       </Item>
       <Item icon={<FundTwoTone />} key="/dashboard">
         <Link to="/dashboard">
-          <Text strong style={{ color: "Blue" }}>
+          <Text strong style={{ color: "blue" }}>
             DASHBOARD
           </Text>
         </Link>
@@ -27,12 +27,17 @@ const Sidebar = ({ history, setToken }) => {
     </>
   );
 
+  const handleLogout = () => {
+    setToken("");
+    history.push("/");
+  };
+
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        height: "100vh", // Corrected from "100hv" to "100vh"
+        height: "100vh",
         justifyContent: "space-between",
       }}
     >
@@ -61,8 +66,8 @@ const Sidebar = ({ history, setToken }) => {
           justifyContent: "center",
         }}
       >
-        <Button type="danger" onClick={() => setToken("")}>
-          Cerrar Session
+        <Button type="danger" onClick={handleLogout}>
+          Cerrar Sesión
         </Button>
       </div>
     </div>
